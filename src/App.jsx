@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DoneIcon from '@mui/icons-material/Done';
 import CancelIcon from '@mui/icons-material/Cancel';
+import NoteItem from './components/NoteItem';
 
 export default function App() {
   const [notas, setNotas] = useState([]);
@@ -40,7 +41,7 @@ export default function App() {
     setNotas([]);
     setNotaActual({ nota: '', index: -1 });
   };
-  
+
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       if (notaActual.index === -1) {
@@ -54,10 +55,6 @@ export default function App() {
   const seleccionarNotaParaEditar = (index) => {
     setNotaActual({ nota: notas[index], index });
   };
-
- 
-
-
   return (
     <ThemeProvider>
       <Typography variant='h4' component="h1" align='center'>
@@ -68,70 +65,80 @@ export default function App() {
           <Paper sx={{ p: 2 }}>
             <Grid container>
               <Grid item xs={10} >
-              <TextField id="nota" label="Nota" placeholder='Escribe tu nota' size='small' fullWidth onKeyDown={handleKeyPress} value={notaActual.index === -1 ? notaActual.nota : ''} onChange={(e) => setNotaActual({ ...notaActual, nota: e.target.value })} />
+                <TextField id="nota" label="Nota" placeholder='Escribe tu nota' size='small' fullWidth onKeyDown={handleKeyPress} value={notaActual.index === -1 ? notaActual.nota : ''} onChange={(e) => setNotaActual({ ...notaActual, nota: e.target.value })} />
               </Grid>
               <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-{notaActual.index === -1 ? (
-<Button variant='contained' color='success' onClick={agregarNota}>+</Button>
-) : (
-<>
-<IconButton color='success' onClick={editarNota}>
-<DoneIcon />
-</IconButton>
-<IconButton color='error' onClick={cancelarEdicion}>
-<CancelIcon />
-</IconButton>
-</>
-)}
-</Grid>
-<Grid item xs={12} >
-<Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
-Notas
-</Typography>
-<List>
-{notas.map((nota, index) => (
-<ListItem key={index}
-secondaryAction={
-<ListItemSecondaryAction>
-{notaActual.index === index ? (
-<>
-<IconButton edge="end" aria-label="done" onClick={editarNota}>
-<DoneIcon />
-</IconButton>
-<IconButton edge="end" aria-label="cancel" onClick={cancelarEdicion}>
-<CancelIcon />
-</IconButton>
-</>
-) : (
-<IconButton edge="end" aria-label="edit" onClick={() => seleccionarNotaParaEditar(index)}>
-<EditIcon />
-</IconButton>
-)}
-<IconButton edge="end" aria-label="delete" onClick={() => eliminarNota(index)}>
-<DeleteIcon />
-</IconButton>
-</ListItemSecondaryAction>
-}
->
-<ListItemAvatar>
-<Avatar>
-<FolderIcon />
-</Avatar>
-</ListItemAvatar>
-<ListItemText
-primary={notaActual.index === index ? (
-<TextField value={notaActual.nota} onChange={(e) => setNotaActual({ ...notaActual, nota: e.target.value })} />
-) : nota}
-/>
-</ListItem>
-))}
-</List>
-<Button variant='contained' color='error' onClick={eliminarTodasLasNotas}>Eliminar todo</Button>
-</Grid>
-</Grid>
-</Paper>
-</Box>
-</Stack>
-</ThemeProvider>
-)
+                {notaActual.index === -1 ? (
+                  <Button variant='contained' color='success' onClick={agregarNota}>+</Button>
+                ) : (
+                  <Stack column='row'>
+                    <IconButton color='success' onClick={editarNota}>
+                      <DoneIcon />
+                    </IconButton>
+                    <IconButton color='error' onClick={cancelarEdicion}>
+                      <CancelIcon />
+                    </IconButton>
+                  </Stack>
+                )}
+              </Grid>
+              <Grid item xs={12} >
+                <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+                  Notas
+                </Typography>
+                <List>
+                  {notas.map((nota, index) => (
+                    <NoteItem key={index}
+                      notaActual={notaActual}
+                      index={index}
+                      editarNota={editarNota}
+                      cancelarEdicion={cancelarEdicion}
+                      seleccionarNotaParaEditar={seleccionarNotaParaEditar}
+                      eliminarNota={eliminarNota}
+                      setNotaActual={setNotaActual}
+                      nota={nota}
+                    />
+                    // <ListItem key={index}
+                    //   secondaryAction={
+                    //     <ListItemSecondaryAction>
+                    //       {notaActual.index === index ? (
+                    //         <Stack direction='row' >
+                    //           <IconButton edge="end" aria-label="done" onClick={editarNota}>
+                    //             <DoneIcon />
+                    //           </IconButton>
+                    //           <IconButton edge="end" aria-label="cancel" onClick={cancelarEdicion}>
+                    //             <CancelIcon />
+                    //           </IconButton>
+                    //         </Stack>
+                    //       ) : (
+                    //         <IconButton edge="end" aria-label="edit" onClick={() => seleccionarNotaParaEditar(index)}>
+                    //           <EditIcon />
+                    //         </IconButton>
+                    //       )}
+                    //       <IconButton edge="end" aria-label="delete" onClick={() => eliminarNota(index)}>
+                    //         <DeleteIcon />
+                    //       </IconButton>
+                    //     </ListItemSecondaryAction>
+                    //   }
+                    // >
+                    //   <ListItemAvatar>
+                    //     <Avatar>
+                    //       <FolderIcon />
+                    //     </Avatar>
+                    //   </ListItemAvatar>
+                    //   <ListItemText
+                    //     primary={notaActual.index === index ? (
+                    //       <TextField value={notaActual.nota} onChange={(e) => setNotaActual({ ...notaActual, nota: e.target.value })} />
+                    //     ) : nota}
+                    //   />
+                    // </ListItem>
+                  ))}
+                </List>
+                <Button variant='contained' color='error' onClick={eliminarTodasLasNotas}>Eliminar todo</Button>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Box>
+      </Stack>
+    </ThemeProvider>
+  )
 }
