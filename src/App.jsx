@@ -17,7 +17,6 @@ export default function App() {
     setNotas([...notas, nota]);
     document.getElementById('nota').value = '';
   };
-  
 
   const eliminarNota = (index) => {
     if (index === notaActual.index) {
@@ -27,7 +26,6 @@ export default function App() {
     nuevasNotas.splice(index, 1);
     setNotas(nuevasNotas);
   };
-
   const editarNota = () => {
     const nuevasNotas = [...notas];
     nuevasNotas[notaActual.index] = notaActual.nota;
